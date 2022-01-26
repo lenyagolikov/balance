@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+  balance:
+    build: .
+    image: balance:latest
+    container_name: app
+    env_file:
+      - ./deploy/.env
+    ports:
+      - 8000:8000
+    networks:
+      - app
+
+networks:
+  app:

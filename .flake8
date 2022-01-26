@@ -1,0 +1,12 @@
+[flake8]
+ignore =
+    E501,
+    W503,
+    W0223
+exclude =
+    .git,
+    __pycache__,
+    app.egg-info,
+    deploy,
+    venv,
+    __init__.py
