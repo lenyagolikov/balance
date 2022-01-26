@@ -1,5 +1,5 @@
 # Export application env vars
-include deploy/.env
+include deploy/.env.prod
 export
 
 PROJECT_NAME := balance

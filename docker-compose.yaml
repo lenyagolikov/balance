@@ -2,14 +2,25 @@ version: '3'
 
 services:
 
-  balance:
+  app:
     build: .
     image: balance:latest
     container_name: app
     env_file:
-      - ./deploy/.env
+      - ./deploy/.env.prod
     ports:
       - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - app
+
+
+  db:
+    image: postgres:13.0
+    container_name: db
+    env_file:
+      - ./deploy/.env.prod
     networks:
       - app
 
