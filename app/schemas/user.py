@@ -3,18 +3,24 @@ from decimal import Decimal
 from pydantic import BaseModel, Field
 
 
-class UserBase(BaseModel):
+class User(BaseModel):
     user_id: int
-
-
-class UserInDB(UserBase):
     balance: Decimal
 
-
-class User(UserInDB):
     class Config:
         orm_mode = True
 
 
-class UserRequest(UserBase):
+class UserRequest(BaseModel):
+    user_id: int
     value: Decimal = Field(gt=0)
+
+
+class UserTransfer(BaseModel):
+    from_: int = Field(alias="from")
+    to: int
+    value: Decimal = Field(gt=0)
+
+
+class UserTransferRequest(BaseModel):
+    detail: str

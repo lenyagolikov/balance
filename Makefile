@@ -22,12 +22,8 @@ build:
 stop:
 	$(COMPOSE) stop
 
-del:
-	$(DOCKER) rm $(PROJECT_SRC)
-	$(DOCKER) rmi $(PROJECT_NAME)
-
 config:
-	cat deploy/.env
+	cat deploy/.env.prod
 
 lint:
 	$(PYTHON) -m flake8 $(PROJECT_SRC)

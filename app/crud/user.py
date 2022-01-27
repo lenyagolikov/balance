@@ -17,9 +17,19 @@ def create(db: Session, request: UserRequest) -> User:
     return user
 
 
-def update(db: Session, value: int, user: User) -> User:
+def update(db: Session, user: User, value: int) -> User:
     user.balance += value
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
+
+
+def transfer(db: Session, sender: User, receiver: User, value: int):
+    sender.balance -= value
+    receiver.balance += value
+
+    db.add_all([sender, receiver])
+    db.commit()
+    db.refresh(sender)
+    db.refresh(receiver)
