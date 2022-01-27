@@ -1,1 +1,1 @@
-from app.schemas.user import User, UserRequest, UserTransfer, UserTransferRequest
+from app.schemas.user import User, UserRequest, UserTransfer, UserTransferResponse

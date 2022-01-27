@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.api import deps
-from app.schemas import User, UserRequest, UserTransfer, UserTransferRequest
+from app.schemas import User, UserRequest, UserTransfer, UserTransferResponse
 
 router = APIRouter()
 
@@ -45,7 +45,7 @@ async def withdraw(request: UserRequest, db: Session = Depends(deps.get_db)):
     return crud.user.update(db=db, user=user, value=-request.value)
 
 
-@router.post("/transfer", response_model=UserTransferRequest)
+@router.post("/transfer", response_model=UserTransferResponse)
 async def transfer(request: UserTransfer, db: Session = Depends(deps.get_db)):
     sender = crud.user.get(db=db, user_id=request.from_)
     if not sender:

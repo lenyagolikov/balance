@@ -13,7 +13,6 @@ def create(db: Session, request: UserRequest) -> User:
     user = User(user_id=request.user_id, balance=request.value)
     db.add(user)
     db.commit()
-    db.refresh(user)
     return user
 
 
@@ -21,7 +20,6 @@ def update(db: Session, user: User, value: int) -> User:
     user.balance += value
     db.add(user)
     db.commit()
-    db.refresh(user)
     return user
 
 
@@ -31,5 +29,3 @@ def transfer(db: Session, sender: User, receiver: User, value: int):
 
     db.add_all([sender, receiver])
     db.commit()
-    db.refresh(sender)
-    db.refresh(receiver)

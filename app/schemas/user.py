@@ -22,5 +22,5 @@ class UserTransfer(BaseModel):
     value: Decimal = Field(gt=0)
 
 
-class UserTransferRequest(BaseModel):
+class UserTransferResponse(BaseModel):
     detail: str
