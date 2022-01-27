@@ -17,18 +17,8 @@ def create(db: Session, request: UserRequest) -> User:
     return user
 
 
-def deposit(db: Session, request: UserRequest, user: User) -> User:
-    user.balance += request.value
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
-
-
-def withdraw(db: Session, request: UserRequest, user: User) -> User | None:
-    if request.value > user.balance:
-        return
-    user.balance -= request.value
+def update(db: Session, value: int, user: User) -> User:
+    user.balance += value
     db.add(user)
     db.commit()
     db.refresh(user)
