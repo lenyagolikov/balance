@@ -1,1 +1,1 @@
-from app.schemas.user import User
+from app.schemas.user import User, UserRequest
