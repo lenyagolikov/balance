@@ -5,6 +5,8 @@ from pydantic import BaseSettings, PostgresDsn, validator
 
 
 class Settings(BaseSettings):
+    EXCHANGE_RATES_API_TOKEN: str = os.getenv("EXCHANGE_RATES_API")
+
     POSTGRES_HOSTS: str = os.getenv("POSTGRES_HOSTS")
     POSTGRES_USER: str = os.getenv("POSTGRES_USER")
     POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD")

@@ -4,17 +4,27 @@ from sqlalchemy.orm import Session
 from app import crud
 from app.api import deps
 from app.schemas import User, UserRequest, UserTransferRequest, UserTransferResponse
+from app.utils.currency import transfer_to_EUR, transfer_to_USD
 
 router = APIRouter()
 
 
 @router.get("/{user_id}", response_model=User)
-async def get_info(user_id: int, db: Session = Depends(deps.get_db)):
+async def get_info(
+    user_id: int, currency: str = "RUB", db: Session = Depends(deps.get_db)
+):
     user = crud.user.get(db=db, user_id=user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="user not found"
         )
+
+    match currency:
+        case "USD":
+            user.balance = transfer_to_USD(user.balance)
+        case "EUR":
+            user.balance = transfer_to_EUR(user.balance)
+
     return user
 
 
