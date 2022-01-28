@@ -14,8 +14,6 @@ jobs:
     services:
       db:
         image: postgres:13.0
-        ports:
-          - 5432:5432
         env:
           POSTGRES_USER: lenyagolikov
           POSTGRES_PASSWORD: 1234
