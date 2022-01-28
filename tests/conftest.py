@@ -22,11 +22,9 @@ def override_db():
         db.close()
 
 
-app.dependency_overrides[get_db] = override_db
-
-
 @pytest.fixture
 def client() -> TestClient:
+    app.dependency_overrides[get_db] = override_db
     return TestClient(app)
 
 
@@ -56,4 +54,3 @@ def users_in_db() -> dict:
             session.add(user)
             session.commit()
     return users
-
