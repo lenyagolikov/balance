@@ -54,3 +54,26 @@ def users_in_db() -> dict:
             session.add(user)
             session.commit()
     return users
+
+
+def not_exist_db():
+    path = settings.SQLALCHEMY_DATABASE_URI.split("/")
+    path[-1] = "bad_db"
+    path = "/".join(path)
+    engine = create_engine(path, pool_pre_ping=True)
+    Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    return Session
+
+
+def db_down():
+    try:
+        db = not_exist_db()()
+        yield db
+    finally:
+        db.close()
+
+
+@pytest.fixture()
+def client_with_db_down():
+    app.dependency_overrides[get_db] = db_down
+    return TestClient(app)
