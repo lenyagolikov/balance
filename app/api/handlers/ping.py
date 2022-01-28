@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.get("/app")
 def ping_app():
-    return {"message": "ok"}
+    return {"detail": "app is up"}
 
 
 @router.get("/db")
@@ -17,5 +17,5 @@ def ping_db(db: Session = Depends(deps.get_db)):
     try:
         db.execute(text("SELECT 1"))
     except Exception:
-        return {"message": "pg is down"}
-    return {"message": "ps is up"}
+        return {"detail": "db is down"}
+    return {"detail": "db is up"}

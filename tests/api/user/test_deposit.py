@@ -22,7 +22,7 @@ data_deposit_not_valid = [{"user_id": 1, "value": 0}, {"user_id": 2, "value": -1
 
 
 @pytest.mark.parametrize("body", data_first_deposit)
-def test_first_deposit_success(client: TestClient, body: dict):
+def test_first_deposit_success(client: TestClient, prepare_db, body: dict):
     resp = client.post(f"/{prefix}/deposit", json=body)
     assert resp.status_code == status.HTTP_201_CREATED
 
@@ -32,7 +32,7 @@ def test_first_deposit_success(client: TestClient, body: dict):
 
 
 @pytest.mark.parametrize("body", data_deposit)
-def test_deposit_success(client: TestClient, users_in_db: dict, body: dict):
+def test_deposit_success(client: TestClient, prepare_db, users_in_db: dict, body: dict):
     resp = client.post(f"/{prefix}/deposit", json=body)
     assert resp.status_code == status.HTTP_200_OK
 

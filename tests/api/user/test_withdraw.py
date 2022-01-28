@@ -21,7 +21,7 @@ data_withdraw_over = [
 
 
 @pytest.mark.parametrize("body", data_withdraw)
-def test_withdraw_success(client: TestClient, users_in_db, body: dict):
+def test_withdraw_success(client: TestClient, prepare_db, users_in_db, body: dict):
     resp = client.post(f"/{prefix}/withdraw", json=body)
     assert resp.status_code == status.HTTP_200_OK
 
@@ -31,14 +31,14 @@ def test_withdraw_success(client: TestClient, users_in_db, body: dict):
 
 
 @pytest.mark.parametrize("body", data_withdraw)
-def test_withdraw_user_not_found(client: TestClient, body: dict):
+def test_withdraw_user_not_found(client: TestClient, prepare_db, body: dict):
     resp = client.post(f"/{prefix}/withdraw", json=body)
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert resp.json() == {"detail": "user not found"}
 
 
 @pytest.mark.parametrize("body", data_withdraw_over)
-def test_withdraw_not_money(client: TestClient, users_in_db, body: dict):
+def test_withdraw_not_money(client: TestClient, prepare_db, users_in_db, body: dict):
     resp = client.post(f"/{prefix}/withdraw", json=body)
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert resp.json() == {"detail": "not enough money"}

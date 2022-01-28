@@ -10,7 +10,7 @@ users_in_db = {1: 100, 2: 200}
 
 
 @pytest.mark.parametrize("user_id", [1, 2])
-def test_get_user_success(client: TestClient, users_in_db, user_id: int):
+def test_get_user_success(client: TestClient, prepare_db, users_in_db, user_id: int):
     resp = client.get(f"/{prefix}/{user_id}")
     assert resp.status_code == status.HTTP_200_OK
 
@@ -20,7 +20,7 @@ def test_get_user_success(client: TestClient, users_in_db, user_id: int):
 
 
 @pytest.mark.parametrize("user_id", [1, 2])
-def test_get_user_not_found(client: TestClient, user_id: int):
+def test_get_user_not_found(client: TestClient, prepare_db, user_id: int):
     resp = client.get(f"/{prefix}/{user_id}")
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
     assert resp.json() == {"detail": "user not found"}
