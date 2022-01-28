@@ -32,27 +32,27 @@ async def get_info(
 async def deposit(
     request: UserRequest, response: Response, db: Session = Depends(deps.get_db)
 ):
-    user = crud.user.get(db=db, user_id=request.user_id)
+    user = crud.user.get(db=db, user_id=request.id)
     if not user:
         response.status_code = status.HTTP_201_CREATED
         return crud.user.create(db=db, request=request)
-    return crud.user.update(db=db, user=user, value=request.value)
+    return crud.user.update(db=db, user=user, amount=request.amount)
 
 
 @router.post("/withdraw", response_model=User)
 async def withdraw(request: UserRequest, db: Session = Depends(deps.get_db)):
-    user = crud.user.get(db=db, user_id=request.user_id)
+    user = crud.user.get(db=db, user_id=request.id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="user not found"
         )
 
-    if request.value > user.balance:
+    if request.amount > user.balance:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="not enough money"
         )
 
-    return crud.user.update(db=db, user=user, value=-request.value)
+    return crud.user.update(db=db, user=user, amount=-request.amount)
 
 
 @router.post("/transfer", response_model=UserTransferResponse)
@@ -63,7 +63,7 @@ async def transfer(request: UserTransferRequest, db: Session = Depends(deps.get_
             status_code=status.HTTP_400_BAD_REQUEST, detail="sender not found"
         )
 
-    if request.value > sender.balance:
+    if request.amount > sender.balance:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="not enough money"
         )
@@ -74,6 +74,6 @@ async def transfer(request: UserTransferRequest, db: Session = Depends(deps.get_
             status_code=status.HTTP_400_BAD_REQUEST, detail="receiver not found"
         )
 
-    crud.user.transfer(db=db, sender=sender, receiver=receiver, value=request.value)
+    crud.user.transfer(db=db, sender=sender, receiver=receiver, amount=request.amount)
 
     return {"detail": "Success"}

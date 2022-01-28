@@ -49,8 +49,8 @@ users = {1: 100, 2: 200}
 @pytest.fixture()
 def users_in_db() -> dict:
     with Session() as session:
-        for id, value in users.items():
-            user = User(user_id=id, balance=value)
+        for id, amount in users.items():
+            user = User(id=id, balance=amount)
             session.add(user)
             session.commit()
     return users

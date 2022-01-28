@@ -9,14 +9,14 @@ users_in_db = {1: 100, 2: 200}
 """
 
 data_withdraw = [
-    {"user_id": 1, "value": 100},
-    {"user_id": 2, "value": 200},
+    {"id": 1, "amount": 100},
+    {"id": 2, "amount": 200},
 ]
 
 # данные для теста, когда недостаточно денег
 data_withdraw_over = [
-    {"user_id": 1, "value": 200},
-    {"user_id": 2, "value": 300},
+    {"id": 1, "amount": 200},
+    {"id": 2, "amount": 300},
 ]
 
 
@@ -26,8 +26,8 @@ def test_withdraw_success(client: TestClient, prepare_db, users_in_db, body: dic
     assert resp.status_code == status.HTTP_200_OK
 
     data = resp.json()
-    assert data["user_id"] == body["user_id"]
-    assert data["balance"] == users_in_db[body["user_id"]] - body["value"]
+    assert data["id"] == body["id"]
+    assert data["balance"] == users_in_db[body["id"]] - body["amount"]
 
 
 @pytest.mark.parametrize("body", data_withdraw)

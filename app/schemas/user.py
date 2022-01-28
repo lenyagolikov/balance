@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
-    user_id: int
+    id: int
     balance: Decimal
 
     class Config:
@@ -12,14 +12,14 @@ class User(BaseModel):
 
 
 class UserRequest(BaseModel):
-    user_id: int
-    value: Decimal = Field(gt=0)
+    id: int
+    amount: Decimal = Field(gt=0)
 
 
 class UserTransferRequest(BaseModel):
     from_: int = Field(alias="from")
     to: int
-    value: Decimal = Field(gt=0)
+    amount: Decimal = Field(gt=0)
 
 
 class UserTransferResponse(BaseModel):

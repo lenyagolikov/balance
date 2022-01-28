@@ -15,7 +15,7 @@ def test_get_user_success(client: TestClient, prepare_db, users_in_db, user_id: 
     assert resp.status_code == status.HTTP_200_OK
 
     data = resp.json()
-    assert data["user_id"] == user_id
+    assert data["id"] == user_id
     assert data["balance"] == users_in_db[user_id]
 
 

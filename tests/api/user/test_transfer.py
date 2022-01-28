@@ -9,21 +9,21 @@ users_in_db = {1: 100, 2: 200}
 """
 
 data_transfer = [
-    {"from": 1, "to": 2, "value": 100},
-    {"from": 2, "to": 1, "value": 200},
+    {"from": 1, "to": 2, "amount": 100},
+    {"from": 2, "to": 1, "amount": 200},
 ]
 
 data_transfer_not_money = [
-    {"from": 1, "to": 2, "value": 200},
-    {"from": 2, "to": 1, "value": 300},
+    {"from": 1, "to": 2, "amount": 200},
+    {"from": 2, "to": 1, "amount": 300},
 ]
 
 data_transfer_sender_not_found = [
-    {"from": 3, "to": 1, "value": 100}
+    {"from": 3, "to": 1, "amount": 100}
 ]
 
 data_transfer_receiver_not_found = [
-    {"from": 1, "to": 3, "value": 100}
+    {"from": 1, "to": 3, "amount": 100}
 ]
 
 

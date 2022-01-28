@@ -5,27 +5,27 @@ from app.schemas import UserRequest
 
 
 def get(db: Session, user_id: int) -> User:
-    user = db.query(User).filter(User.user_id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
     return user
 
 
 def create(db: Session, request: UserRequest) -> User:
-    user = User(user_id=request.user_id, balance=request.value)
+    user = User(id=request.id, balance=request.amount)
     db.add(user)
     db.commit()
     return user
 
 
-def update(db: Session, user: User, value: int) -> User:
-    user.balance += value
+def update(db: Session, user: User, amount: int) -> User:
+    user.balance += amount
     db.add(user)
     db.commit()
     return user
 
 
-def transfer(db: Session, sender: User, receiver: User, value: int):
-    sender.balance -= value
-    receiver.balance += value
+def transfer(db: Session, sender: User, receiver: User, amount: int):
+    sender.balance -= amount
+    receiver.balance += amount
 
     db.add_all([sender, receiver])
     db.commit()
