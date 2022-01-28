@@ -33,14 +33,18 @@ def prepare_db():
 
 
 @pytest.fixture
-def client(prepare_db):
+def client(prepare_db) -> TestClient:
     return TestClient(app)
 
 
+users = {1: 100, 2: 200}
+
+
 @pytest.fixture()
-def add_data_to_db():
+def users_in_db() -> dict:
     with Session() as session:
-        for id in range(1, 3):
-            user = User(user_id=id, balance=id * 100)
+        for id, value in users.items():
+            user = User(user_id=id, balance=value)
             session.add(user)
             session.commit()
+    return users
