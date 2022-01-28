@@ -26,14 +26,23 @@ app.dependency_overrides[get_db] = override_db
 
 
 @pytest.fixture
+def client() -> TestClient:
+    return TestClient(app)
+
+
+@pytest.fixture()
 def prepare_db():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
 
 @pytest.fixture
-def client(prepare_db) -> TestClient:
-    return TestClient(app)
+def db():
+    try:
+        db = Session()
+        yield db
+    finally:
+        db.close()
 
 
 users = {1: 100, 2: 200}
@@ -47,13 +56,4 @@ def users_in_db() -> dict:
             session.add(user)
             session.commit()
     return users
-
-
-@pytest.fixture
-def db():
-    try:
-        db = Session()
-        yield db
-    finally:
-        db.close()
 
