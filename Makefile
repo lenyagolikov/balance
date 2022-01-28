@@ -1,5 +1,5 @@
-# Export application env vars
-include deploy/.env.prod
+# Export application env vars (.prod | .test)
+include deploy/.env.test
 export
 
 PROJECT_NAME := balance
@@ -37,7 +37,7 @@ test:
 test-cov:
 	$(PYTHON) -m pytest -vv --cov=$(PROJECT_SRC)
 
-test-cov-html: test
+test-cov-html: test-cov
 	$(PYTHON) -m coverage html
 	$(PYTHON) -m webbrowser htmlcov/index.html
 

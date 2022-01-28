@@ -16,7 +16,7 @@ class UserRequest(BaseModel):
     value: Decimal = Field(gt=0)
 
 
-class UserTransfer(BaseModel):
+class UserTransferRequest(BaseModel):
     from_: int = Field(alias="from")
     to: int
     value: Decimal = Field(gt=0)

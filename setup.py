@@ -33,7 +33,7 @@ setup(
     long_description=open('README.md').read(),
     platforms='all',
     python_requires='>=3.10',
-    packages=find_packages(exclude=[f'{module_name}/tests']),
+    packages=find_packages(exclude=['tests']),
     install_requires=load_requirements('requirements.txt'),
     entry_points={
         'console_scripts': [
