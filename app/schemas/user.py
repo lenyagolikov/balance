@@ -11,7 +11,7 @@ class UserInDB(UserBase):
     balance: Decimal = Field(ge=0)
 
 
-class User(UserInDB):
+class UserBalance(UserInDB):
     class Config:
         orm_mode = True
 

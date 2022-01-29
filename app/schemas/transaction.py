@@ -1,15 +1,14 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
-class TransactionCreate(BaseModel):
+class Transaction(BaseModel):
     user_id: int
     type: str
-    amount: Decimal = Field(gt=0)
+    amount: Decimal 
     at_created: datetime
 
     class Config:
-        use_enum_values = True
         orm_mode = True

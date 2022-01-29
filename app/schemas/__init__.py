@@ -1,2 +1,2 @@
-from app.schemas.transaction import TransactionCreate
-from app.schemas.user import User, UserCreate, UserTransferCreate
+from app.schemas.transaction import Transaction
+from app.schemas.user import UserBalance, UserCreate, UserTransferCreate
