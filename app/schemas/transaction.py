@@ -3,12 +3,10 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
-from app.models.transaction import Type
-
 
 class TransactionCreate(BaseModel):
     user_id: int
-    type: Type
+    type: str
     amount: Decimal = Field(gt=0)
     at_created: datetime
 

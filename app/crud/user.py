@@ -1,4 +1,3 @@
-from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.models import User, Transaction
@@ -12,12 +11,7 @@ def get(db: Session, user_id: int) -> User:
 
 def create(db: Session, request: UserCreate) -> User:
     user = User(id=request.id, balance=request.amount)
-    transaction = Transaction(
-        user_id=user,
-        type="deposit",
-        amount=request.amount,
-        at_created=datetime.utcnow(),
-    )
+    transaction = Transaction(user_id=user, type="deposit", amount=request.amount)
     user.transactions.append(transaction)
 
     db.add(user)
@@ -28,13 +22,9 @@ def create(db: Session, request: UserCreate) -> User:
 
 def update(db: Session, user: User, amount: int) -> User:
     if amount > 0:
-        transaction = Transaction(
-            user_id=user, type="deposit", amount=amount, at_created=datetime.utcnow()
-        )
+        transaction = Transaction(user_id=user, type="deposit", amount=amount)
     else:
-        transaction = Transaction(
-            user_id=user, type="withdraw", amount=amount, at_created=datetime.utcnow()
-        )
+        transaction = Transaction(user_id=user, type="withdraw", amount=amount)
 
     user.balance += amount
     user.transactions.append(transaction)
@@ -46,14 +36,8 @@ def update(db: Session, user: User, amount: int) -> User:
 
 
 def transfer(db: Session, sender: User, receiver: User, amount: int):
-    current_time = datetime.utcnow()
-
-    sender_transaction = Transaction(
-        user_id=sender, type="transfer", amount=-amount, at_created=current_time
-    )
-    receiver_transaction = Transaction(
-        user_id=receiver, type="transfer", amount=amount, at_created=current_time
-    )
+    sender_transaction = Transaction(user_id=sender, type="transfer", amount=-amount)
+    receiver_transaction = Transaction(user_id=receiver, type="transfer", amount=amount)
 
     sender.balance -= amount
     receiver.balance += amount
