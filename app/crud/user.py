@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.user import User
-from app.schemas import UserRequest
+from app.schemas.user import UserCreate
 
 
 def get(db: Session, user_id: int) -> User:
@@ -9,7 +9,7 @@ def get(db: Session, user_id: int) -> User:
     return user
 
 
-def create(db: Session, request: UserRequest) -> User:
+def create(db: Session, request: UserCreate) -> User:
     user = User(id=request.id, balance=request.amount)
     db.add(user)
     db.commit()
