@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.models.transaction import Transaction
-from app.schemas.transaction import TransactionCreate
+from app.models import Transaction
+from app.schemas import TransactionCreate
 
 
 def get(db: Session, user_id: int) -> list[Transaction]:

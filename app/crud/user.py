@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.models.user import User
-from app.schemas.user import UserCreate
+from app.models import User
+from app.schemas import UserCreate
 
 
 def get(db: Session, user_id: int) -> User:

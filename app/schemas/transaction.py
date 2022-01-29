@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
-from app.models.user import Type
+from app.models.transaction import Type
 
 
 class TransactionCreate(BaseModel):

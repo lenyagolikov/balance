@@ -8,7 +8,7 @@ class UserBase(BaseModel):
 
 
 class UserInDB(UserBase):
-    balance: Decimal = Field(gt=0)
+    balance: Decimal = Field(ge=0)
 
 
 class User(UserInDB):

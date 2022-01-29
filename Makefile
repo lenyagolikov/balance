@@ -29,7 +29,7 @@ lint:
 	$(PYTHON) -m flake8 $(PROJECT_SRC)
 
 cs:
-	$(PYTHON) -m black $(PROJECT_SRC)
+	$(PYTHON) -m black $(PROJECT_SRC) --target-version py310
 
 test:
 	$(PYTHON) -m pytest -vv

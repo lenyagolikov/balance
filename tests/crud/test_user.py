@@ -2,13 +2,13 @@ import pytest
 from sqlalchemy.orm import Session
 
 from app import crud
-from app.models.user import User
-from app.schemas import UserRequest
+from app.models import User
+from app.schemas import UserCreate
 
 
 data_for_create = [
-    UserRequest(id=1, amount=100),
-    UserRequest(id=2, amount=200),
+    UserCreate(id=1, amount=100),
+    UserCreate(id=2, amount=200),
 ]
 
 data_for_update = [
@@ -31,7 +31,7 @@ def test_get(db: Session, prepare_db, users_in_db: dict, user_id: int):
 
 
 @pytest.mark.parametrize("user", data_for_create)
-def test_create(db: Session, prepare_db, user: UserRequest):
+def test_create(db: Session, prepare_db, user: UserCreate):
     new_user = crud.user.create(db=db, request=user)
     assert new_user.id == user.id
     assert new_user.balance == user.amount
