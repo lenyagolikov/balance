@@ -20,7 +20,7 @@ class UserCreate(UserBase):
     amount: Decimal = Field(gt=0)
 
 
-class UserTransferCreate(BaseModel):
+class UserTransfer(BaseModel):
     from_: int = Field(alias="from")
     to: int
     amount: Decimal = Field(gt=0)

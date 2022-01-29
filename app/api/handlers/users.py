@@ -3,14 +3,14 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.api import deps
-from app.schemas import User, UserCreate, UserTransferCreate
+from app.schemas import UserBalance, UserCreate, UserTransfer
 from app.utils.currency import transfer_to_EUR, transfer_to_USD
 
 router = APIRouter()
 
 
-@router.get("/{user_id}", response_model=User)
-async def get_info(
+@router.get("/{user_id}", response_model=UserBalance)
+async def get_balance(
     user_id: int, currency: str = "RUB", db: Session = Depends(deps.get_db)
 ):
     user = crud.user.get(db=db, user_id=user_id)
@@ -28,7 +28,7 @@ async def get_info(
     return user
 
 
-@router.post("/deposit", response_model=User)
+@router.post("/deposit", response_model=UserBalance)
 async def deposit(
     request: UserCreate, response: Response, db: Session = Depends(deps.get_db)
 ):
@@ -39,7 +39,7 @@ async def deposit(
     return crud.user.update(db=db, user=user, amount=request.amount)
 
 
-@router.post("/withdraw", response_model=User)
+@router.post("/withdraw", response_model=UserBalance)
 async def withdraw(request: UserCreate, db: Session = Depends(deps.get_db)):
     user = crud.user.get(db=db, user_id=request.id)
     if not user:
@@ -56,7 +56,7 @@ async def withdraw(request: UserCreate, db: Session = Depends(deps.get_db)):
 
 
 @router.post("/transfer")
-async def transfer(request: UserTransferCreate, db: Session = Depends(deps.get_db)):
+async def transfer(request: UserTransfer, db: Session = Depends(deps.get_db)):
     sender = crud.user.get(db=db, user_id=request.from_)
     if not sender:
         raise HTTPException(
