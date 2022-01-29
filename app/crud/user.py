@@ -5,8 +5,7 @@ from app.schemas import UserCreate
 
 
 def get(db: Session, user_id: int) -> User:
-    user = db.query(User).filter(User.id == user_id).first()
-    return user
+    return db.query(User).filter(User.id == user_id).first()
 
 
 def create(db: Session, request: UserCreate) -> User:
