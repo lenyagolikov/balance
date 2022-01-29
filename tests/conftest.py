@@ -3,12 +3,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.db.base import Base
-from app.core.config import settings
 from app.api.deps import get_db
+from app.core.config import settings
 from app.main import app
-from app.models.user import User
-
+from app.models import Base, User
 
 engine = create_engine(settings.SQLALCHEMY_DATABASE_URI, pool_pre_ping=True)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)

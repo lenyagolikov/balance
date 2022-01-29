@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models import User, Transaction
+from app.models import Transaction, User
 from app.schemas import UserCreate
 
 

@@ -1,5 +1,4 @@
 import os
-from typing import Any
 
 from pydantic import BaseSettings, PostgresDsn, validator
 
@@ -14,7 +13,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: PostgresDsn | None = None
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> str:
+    def assemble_db_connection(cls, v: str | None, values: dict) -> str:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(

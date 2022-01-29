@@ -1,7 +1,7 @@
 from sqlalchemy import Column, DECIMAL, Integer
 from sqlalchemy.orm import relationship
 
-from app.db.base import Base
+from app.models.base import Base
 
 
 class User(Base):
