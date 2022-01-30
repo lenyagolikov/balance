@@ -38,6 +38,7 @@ setup(
     entry_points={
         'console_scripts': [
             f'{module_name} = {module_name}.main:main',
+            f'{module_name}-db = {module_name}.init_db:main',
         ]
     },
     include_package_data=True
