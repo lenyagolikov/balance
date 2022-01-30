@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app import crud
 from app.api import deps
 from app.schemas import UserBalance, UserCreate, UserTransfer
-from app.utils.currency import transfer_to_EUR, transfer_to_USD
+from app.utils.currency import convert_to_EUR, convert_to_USD
 
 router = APIRouter()
 
@@ -21,9 +21,9 @@ async def get_balance(
 
     match currency:
         case "USD":
-            user.balance = transfer_to_USD(user.balance)
+            user.balance = convert_to_USD(user.balance)
         case "EUR":
-            user.balance = transfer_to_EUR(user.balance)
+            user.balance = convert_to_EUR(user.balance)
 
     return user
 
