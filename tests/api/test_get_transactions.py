@@ -16,6 +16,17 @@ data_transfer = [
     {"from": 2, "to": 1, "amount": 200},
 ]
 
+data_limit = [
+    ({"id": 1, "amount": 100}, 2),
+    ({"id": 1, "amount": 200}, 3),
+]
+
+
+data_limit_offset = [
+    ({"id": 1, "amount": 100}, 2, 2),
+    ({"id": 1, "amount": 200}, 3, 1),
+]
+
 
 @pytest.mark.parametrize("data", data)
 def test_get_transactions_after_deposit(client: TestClient, prepare_db, data: dict):
@@ -69,3 +80,31 @@ def test_get_transactions_after_transfer(
     assert body["user_id"] == data["to"]
     assert body["type"] == "transfer"
     assert body["amount"] == data["amount"]
+
+
+@pytest.mark.parametrize("data, limit", data_limit)
+def test_get_transactions_with_limit(
+    client: TestClient, prepare_db, data: dict, limit: int
+):
+    for _ in range(5):
+        client.post(f"/{prefix}/deposit", json=data)
+
+    resp = client.get(f"/{trprefix}/{data['id']}?limit={limit}")
+    assert resp.status_code == status.HTTP_200_OK
+    assert len(resp.json()) == limit
+
+
+@pytest.mark.parametrize("data, limit, offset", data_limit_offset)
+def test_get_transactions_with_limit_and_offset(
+    client: TestClient, prepare_db, data: dict, limit: int, offset: int
+):
+    total = 5
+    for _ in range(total):
+        client.post(f"/{prefix}/deposit", json=data)
+
+    resp = client.get(f"/{trprefix}/{data['id']}?limit={limit}&offset={offset}")
+    assert resp.status_code == status.HTTP_200_OK
+
+    quantity = total - offset + 1
+    quantity = min(quantity, limit)
+    assert len(resp.json()) == quantity
