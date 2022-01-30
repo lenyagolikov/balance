@@ -69,10 +69,3 @@ def test_get_transactions_after_transfer(
     assert body["user_id"] == data["to"]
     assert body["type"] == "transfer"
     assert body["amount"] == data["amount"]
-
-
-@pytest.mark.parametrize("user_id", [1, 2])
-def test_get_transactions_not_found(client: TestClient, prepare_db, user_id: int):
-    resp = client.get(f"/{trprefix}/{user_id}")
-    assert resp.status_code == status.HTTP_400_BAD_REQUEST
-    assert resp.json() == {"detail": "user not found"}
