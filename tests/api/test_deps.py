@@ -1,9 +1,8 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api import deps
 
 
-def test_get_db_deps():
-    db = deps.get_db()
-    session = next(db)
-    assert isinstance(session, Session)
+async def test_get_db_deps():
+    async_session = await deps.get_db().__anext__()
+    assert isinstance(async_session, AsyncSession)
