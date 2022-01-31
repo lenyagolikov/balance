@@ -1,10 +1,11 @@
 import pytest
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import crud
 from app.models import User
 from app.schemas import UserCreate
 
+data_in_db = {1: 100, 2: 200}
 
 data_for_create = [
     UserCreate(id=1, amount=100),
@@ -24,32 +25,32 @@ data_for_transfer = [
 
 
 @pytest.mark.parametrize("user_id", [1, 2])
-def test_get(db: Session, prepare_db, users_in_db: dict, user_id: int):
-    user = crud.user.get(db=db, user_id=user_id)
+async def test_get(db_with_data: AsyncSession, user_id: int):
+    user = await crud.user.get(db=db_with_data, user_id=user_id)
     assert user.id == user_id
-    assert user.balance == users_in_db[user_id]
+    assert user.balance == data_in_db[user_id]
 
 
 @pytest.mark.parametrize("user", data_for_create)
-def test_create(db: Session, prepare_db, user: UserCreate):
-    new_user = crud.user.create(db=db, request=user)
+async def test_create(db: AsyncSession, user: UserCreate):
+    new_user = await crud.user.create(db=db, request=user)
     assert new_user.id == user.id
     assert new_user.balance == user.amount
 
 
 @pytest.mark.parametrize("user, amount", data_for_update)
-def test_update(db: Session, prepare_db, user: User, amount: int):
+async def test_update(db: AsyncSession, user: User, amount: int):
     old_balance = user.balance
-    crud.user.update(db=db, user=user, amount=amount)
+    await crud.user.update(db=db, user=user, amount=amount)
     assert user.balance == old_balance + amount
 
 
 @pytest.mark.parametrize("sender, receiver, amount", data_for_transfer)
-def transfer(db: Session, prepare_db, sender: User, receiver: User, amount: int):
+async def test_transfer(db: AsyncSession, sender: User, receiver: User, amount: int):
     sender_old_balance = sender.balance
     receiver_old_balance = receiver.balance
 
-    crud.user.transfer(db=db, sender=sender, receiver=receiver, amount=amount)
+    await crud.user.transfer(db=db, sender=sender, receiver=receiver, amount=amount)
 
     assert sender.balance == sender_old_balance - amount
     assert receiver.balance == receiver_old_balance + amount
