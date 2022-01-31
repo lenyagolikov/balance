@@ -21,8 +21,13 @@ services:
     container_name: db
     env_file:
       - ./deploy/.env.prod
+    volumes:
+     - db_data:/var/lib/postgresql/data/
     networks:
       - app
 
 networks:
   app:
+
+volumes:
+  db_data:
