@@ -1,25 +1,29 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.orm import selectinload
 
 from app.models import Transaction, User
 from app.schemas import UserCreate
 
 
-def get(db: Session, user_id: int) -> User:
-    return db.query(User).filter(User.id == user_id).first()
+async def get(db: AsyncSession, user_id: int) -> User:
+    stmt = select(User).options(selectinload(User.transactions))
+    user = await db.execute(stmt.where(User.id == user_id))
+    return user.scalar()
 
 
-def create(db: Session, request: UserCreate) -> User:
+async def create(db: AsyncSession, request: UserCreate) -> User:
     user = User(id=request.id, balance=request.amount)
     transaction = Transaction(user_id=user, type="deposit", amount=request.amount)
     user.transactions.append(transaction)
 
     db.add(user)
-    db.commit()
+    await db.commit()
 
     return user
 
 
-def update(db: Session, user: User, amount: int) -> User:
+async def update(db: AsyncSession, user: User, amount: int) -> User:
     if amount > 0:
         transaction = Transaction(user_id=user, type="deposit", amount=amount)
     else:
@@ -29,12 +33,12 @@ def update(db: Session, user: User, amount: int) -> User:
     user.transactions.append(transaction)
 
     db.add(user)
-    db.commit()
+    await db.commit()
 
     return user
 
 
-def transfer(db: Session, sender: User, receiver: User, amount: int):
+async def transfer(db: AsyncSession, sender: User, receiver: User, amount: int):
     sender_transaction = Transaction(user_id=sender, type="transfer", amount=-amount)
     receiver_transaction = Transaction(user_id=receiver, type="transfer", amount=amount)
 
@@ -45,4 +49,4 @@ def transfer(db: Session, sender: User, receiver: User, amount: int):
     receiver.transactions.append(receiver_transaction)
 
     db.add_all([sender, receiver])
-    db.commit()
+    await db.commit()
