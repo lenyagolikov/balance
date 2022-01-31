@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.get("/app")
-def ping_app():
+async def ping_app():
     return {"detail": "app is up"}
 
 

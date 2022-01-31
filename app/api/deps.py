@@ -4,8 +4,7 @@ from app.db.session import async_session
 
 
 async def get_db() -> Generator:
-    try:
-        db = async_session()
-        yield db
-    finally:
-        await db.close()
+    async with async_session() as session:
+        yield session
+        await session.flush()
+        await session.rollback()
