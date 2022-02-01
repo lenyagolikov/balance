@@ -1,13 +1,9 @@
 import pytest
 from fastapi import status
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
 
 prefix = "users"
 trprefix = "transactions"
-
-"""
-users_in_db = {1: 100, 2: 200}
-"""
 
 data = [{"id": 1, "amount": 100}, {"id": 2, "amount": 200}]
 
@@ -29,11 +25,11 @@ data_limit_offset = [
 
 
 @pytest.mark.parametrize("data", data)
-def test_get_transactions_after_deposit(client: TestClient, prepare_db, data: dict):
-    resp = client.post(f"/{prefix}/deposit", json=data)
+async def test_get_transactions_after_deposit(async_client: AsyncClient, data: dict):
+    resp = await async_client.post(f"/{prefix}/deposit", json=data)
     assert resp.status_code == status.HTTP_201_CREATED
 
-    resp = client.get(f"/{trprefix}/{data['id']}")
+    resp = await async_client.get(f"/{trprefix}/{data['id']}")
     assert resp.status_code == status.HTTP_200_OK
 
     body = resp.json()[0]
@@ -43,13 +39,13 @@ def test_get_transactions_after_deposit(client: TestClient, prepare_db, data: di
 
 
 @pytest.mark.parametrize("data", data)
-def test_get_transactions_after_withdraw(
-    client: TestClient, prepare_db, users_in_db, data: dict
+async def test_get_transactions_after_withdraw(
+    async_client: AsyncClient, db_with_data, data: dict
 ):
-    resp = client.post(f"/{prefix}/withdraw", json=data)
+    resp = await async_client.post(f"/{prefix}/withdraw", json=data)
     assert resp.status_code == status.HTTP_200_OK
 
-    resp = client.get(f"/{trprefix}/{data['id']}")
+    resp = await async_client.get(f"/{trprefix}/{data['id']}")
     assert resp.status_code == status.HTTP_200_OK
 
     body = resp.json()[0]
@@ -59,13 +55,13 @@ def test_get_transactions_after_withdraw(
 
 
 @pytest.mark.parametrize("data", data_transfer)
-def test_get_transactions_after_transfer(
-    client: TestClient, prepare_db, users_in_db, data: dict
+async def test_get_transactions_after_transfer(
+    async_client: AsyncClient, db_with_data, data: dict
 ):
-    resp = client.post(f"/{prefix}/transfer", json=data)
+    resp = await async_client.post(f"/{prefix}/transfer", json=data)
     assert resp.status_code == status.HTTP_200_OK
 
-    resp = client.get(f"/{trprefix}/{data['from']}")
+    resp = await async_client.get(f"/{trprefix}/{data['from']}")
     assert resp.status_code == status.HTTP_200_OK
 
     body = resp.json()[0]
@@ -73,7 +69,7 @@ def test_get_transactions_after_transfer(
     assert body["type"] == "transfer"
     assert body["amount"] == -data["amount"]
 
-    resp = client.get(f"/{trprefix}/{data['to']}")
+    resp = await async_client.get(f"/{trprefix}/{data['to']}")
     assert resp.status_code == status.HTTP_200_OK
 
     body = resp.json()[0]
@@ -83,26 +79,28 @@ def test_get_transactions_after_transfer(
 
 
 @pytest.mark.parametrize("data, limit", data_limit)
-def test_get_transactions_with_limit(
-    client: TestClient, prepare_db, data: dict, limit: int
+async def test_get_transactions_with_limit(
+    async_client: AsyncClient, data: dict, limit: int
 ):
     for _ in range(5):
-        client.post(f"/{prefix}/deposit", json=data)
+        await async_client.post(f"/{prefix}/deposit", json=data)
 
-    resp = client.get(f"/{trprefix}/{data['id']}?limit={limit}")
+    resp = await async_client.get(f"/{trprefix}/{data['id']}?limit={limit}")
     assert resp.status_code == status.HTTP_200_OK
     assert len(resp.json()) == limit
 
 
 @pytest.mark.parametrize("data, limit, offset", data_limit_offset)
-def test_get_transactions_with_limit_and_offset(
-    client: TestClient, prepare_db, data: dict, limit: int, offset: int
+async def test_get_transactions_with_limit_and_offset(
+    async_client: AsyncClient, data: dict, limit: int, offset: int
 ):
     total = 5
     for _ in range(total):
-        client.post(f"/{prefix}/deposit", json=data)
+        await async_client.post(f"/{prefix}/deposit", json=data)
 
-    resp = client.get(f"/{trprefix}/{data['id']}?limit={limit}&offset={offset}")
+    resp = await async_client.get(
+        f"/{trprefix}/{data['id']}?limit={limit}&offset={offset}"
+    )
     assert resp.status_code == status.HTTP_200_OK
 
     quantity = total - offset + 1
