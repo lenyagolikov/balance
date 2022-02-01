@@ -41,7 +41,7 @@ curl localhost:8080/ping/db
 - `make build` Ресборка контейнеров при изменениях в коде
 - `make stop` Остановка контейнеров
 - `make lint` Запуск линтера flake8
-- `make cs` Запуск black для форматироваия кода 
+- `make cs` Запуск black для форматирования кода 
 - `make test` Запуск тестов
 - `make test-cov` Запуск тестов с покрытием кода
 - `make test-cov-html` Запуск тестов с отчетом в html
