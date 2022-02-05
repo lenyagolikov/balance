@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    environment:
+        name: testing env
 
     runs-on: ubuntu-latest
     
@@ -17,9 +19,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: lenyagolikov
-          POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: testdb
+          POSTGRES_USER: ${{POSTGRES_USER}} 
+          POSTGRES_PASSWORD: ${{POSTGRES_PASSWORD}}
+          POSTGRES_DB: ${{POSTGRES_DB}}
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5    
 
     steps:

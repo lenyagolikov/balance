@@ -19,8 +19,8 @@ run:
 build:
 	$(COMPOSE) build
 
-stop:
-	$(COMPOSE) stop
+down:
+	$(COMPOSE) down
 
 config:
 	cat deploy/.env.prod
